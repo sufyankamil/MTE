@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:montra_expense_tracker/common/success/success_screen.dart';
 import 'package:pinput/pinput.dart';
 
 class SignupVerification extends StatefulWidget {
@@ -72,7 +73,7 @@ class _SignupVerificationState extends State<SignupVerification> {
       ),
     );
 
-    String _formatTime(int seconds) {
+    String formatTime(int seconds) {
       final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
       final secs = (seconds % 60).toString().padLeft(2, '0');
       return '$minutes:$secs';
@@ -154,7 +155,7 @@ class _SignupVerificationState extends State<SignupVerification> {
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
                     children: <TextSpan>[
                       TextSpan(
-                        text: _formatTime(_secondsRemaining),
+                        text: formatTime(_secondsRemaining),
                         style: const TextStyle(
                           fontSize: 16,
                           color: Color(0xFF7F3DFF),
@@ -218,12 +219,15 @@ class _SignupVerificationState extends State<SignupVerification> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignupVerification(),
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SuccessScreen(
+                          text: 'Account Created Successfully',
+                          routeName: '/verification',
                         ),
-                      );
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0XFF7F3DFF),

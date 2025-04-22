@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:montra_expense_tracker/features/view/forgot_password/mail_sent.dart';
+import 'package:montra_expense_tracker/features/view/onboarding/forgot_password/mail_sent.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});

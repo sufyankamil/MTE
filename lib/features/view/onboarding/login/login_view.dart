@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:montra_expense_tracker/features/view/forgot_password/forgot_password.dart';
+import 'package:montra_expense_tracker/features/view/onboarding/forgot_password/forgot_password.dart';
 
 import '../signup/sign_up_view.dart';
 
