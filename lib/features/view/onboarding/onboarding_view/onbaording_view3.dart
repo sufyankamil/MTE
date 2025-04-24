@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:montra_expense_tracker/features/view/signup/sign_up_view.dart';
+import 'package:montra_expense_tracker/features/view/onboarding/signup/sign_up_view.dart';
 
-import '../../login/login_view.dart';
+import '../login/login_view.dart';
 
 class OnboardingView3 extends StatelessWidget {
   const OnboardingView3({super.key});
