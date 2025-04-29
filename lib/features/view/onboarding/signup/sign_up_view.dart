@@ -34,7 +34,11 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sign Up"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Sign Up"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 38.0),
@@ -129,7 +133,10 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                             const TextSpan(
                               text: " and ",
-                              style: TextStyle(color: Colors.black, fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
                             ),
                             TextSpan(
                               text: "Privacy Policy",
@@ -157,7 +164,9 @@ class _SignUpViewState extends State<SignUpView> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const SignupVerification(),
+                                      builder:
+                                          (context) =>
+                                              const SignupVerification(),
                                     ),
                                   );
                                 }
