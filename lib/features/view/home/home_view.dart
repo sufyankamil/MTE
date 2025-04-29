@@ -3,14 +3,8 @@ import 'package:model_viewer_plus/model_viewer_plus.dart';
 
 import '../settings/settings_view.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
