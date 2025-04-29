@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montra_expense_tracker/features/view/home/home_view.dart';
 import 'package:montra_expense_tracker/features/view/onboarding/signup/sign_up_view.dart';
 
 import '../login/login_view.dart';
@@ -84,11 +85,18 @@ class OnboardingView3 extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => const LoginView()
+                  //   ),
+                  //   (route) => false,
+                  // );
+                  Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginView()
+                    MaterialPageRoute(
+                      builder:
+                          (context) => HomeView(),
                     ),
-                    (route) => false,
                   );
                 },
                 style: ElevatedButton.styleFrom(
