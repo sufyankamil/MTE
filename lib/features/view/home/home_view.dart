@@ -1,36 +1,136 @@
 import 'package:flutter/material.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 
 import '../settings/settings_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        backgroundColor: const Color(0XFF7F3DFF),
+        title: const Text(
+          "Welcome to Montra.",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
+          IconButton(icon: const Icon(Icons.notifications, color: Colors.white,), onPressed: () {}),
           IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings, color: Colors.white,),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsView()
-                ),
+                MaterialPageRoute(builder: (context) => const SettingsView()),
               );
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(),
+      body: Column(
+        spacing: 20,
+        children: [
+          Expanded(
+            child: const ModelViewer(
+              backgroundColor: Color(0XFF7F3DFF),
+              src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+              alt: 'A 3D model of an astronaut',
+              ar: true,
+              autoRotate: true,
+              iosSrc: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
+              disableZoom: false,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              "Explore the features of Montra.",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              Card(
+                color: const Color(0XFF7F3DFF),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/accountSetup');
+                    },
+                    child: const Text(
+                      "Account Setup",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Card(
+                color: const Color(0XFF7F3DFF),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/add-new-account');
+                    },
+                    child: const Text(
+                      "Add New Account",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Card(
+                color: const Color(0XFF7F3DFF),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/verification');
+                    },
+                    child: const Text(
+                      "Set Pin",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Card(
+                color: const Color(0XFF7F3DFF),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsView(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Settings",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

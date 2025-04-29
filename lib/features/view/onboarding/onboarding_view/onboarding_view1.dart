@@ -1,9 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../home/home_view.dart';
 import 'onboarding_view2.dart';
 
-class OnboardingView1 extends StatelessWidget {
+class OnboardingView1 extends StatefulWidget {
   const OnboardingView1({super.key});
+
+  @override
+  State<OnboardingView1> createState() => _OnboardingView1State();
+}
+
+class _OnboardingView1State extends State<OnboardingView1> {
+  final storage = FlutterSecureStorage();
+
+  void getCredentials() async {
+    String? email = await storage.read(key: 'email');
+    String? password = await storage.read(key: 'password');
+    if (email != null && password != null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+        (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No credentials found. Please login.")),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCredentials();
+  }
 
   @override
   Widget build(BuildContext context) {

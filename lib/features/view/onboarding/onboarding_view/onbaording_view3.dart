@@ -85,19 +85,19 @@ class OnboardingView3 extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigator.pushAndRemoveUntil(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const LoginView()
-                  //   ),
-                  //   (route) => false,
-                  // );
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => HomeView(),
+                    MaterialPageRoute(builder: (context) => const LoginView()
                     ),
+                    (route) => false,
                   );
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder:
+                  //         (context) => HomeView(),
+                  //   ),
+                  // );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0XFFEEE5FF),

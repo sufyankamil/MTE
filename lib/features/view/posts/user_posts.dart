@@ -1,5 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:language_detector/language_detector.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:translator/translator.dart';
 
 import '../../api/user_api.dart';
 import '../../model/posts_model.dart';
@@ -14,18 +18,115 @@ class UserPosts extends StatefulWidget {
 class _UserPostsState extends State<UserPosts> {
   late Future<List<PostsModel>> usersPosts;
 
+  final translator = GoogleTranslator();
+
   @override
   void initState() {
     super.initState();
     usersPosts = getUsersPosts();
   }
 
+  // Detect the language of the post's content
+  Future<String> detectPostLanguage(String title, String body) async {
+    String titleLanguage = await LanguageDetector.getLanguageCode(
+      content: title,
+    );
+    String bodyLanguage = await LanguageDetector.getLanguageCode(content: body);
+
+    // If both title and body have the same language, return that language
+    if (titleLanguage == bodyLanguage) {
+      return titleLanguage;
+    } else {
+      return 'unknown'; // Indeterminate language
+    }
+  }
+
+  Future<Map<String, String>> translateText(String title, String body) async {
+    final translatedTitle = await translator.translate(title, to: 'en');
+    final translatedBody = await translator.translate(body, to: 'en');
+    return {'title': translatedTitle.text, 'body': translatedBody.text};
+  }
+
+  void showTranslationBottomSheet(
+    BuildContext context,
+    String title,
+    String body,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(26.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(body, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Request permission to access the user's audio,camera & location
+  void requestPermission() async {
+    final cameraStatus = await Permission.camera.request();
+    final locationStatus = await Permission.location.request();
+
+    if (cameraStatus == PermissionStatus.granted &&
+        locationStatus == PermissionStatus.granted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Permission granted"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else if (cameraStatus == PermissionStatus.denied ||
+        locationStatus == PermissionStatus.denied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            "Permission denied",
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else if (cameraStatus == PermissionStatus.permanentlyDenied ||
+        locationStatus == PermissionStatus.permanentlyDenied) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(
+              "Permission denied. Please enable it in settings.",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      await openAppSettings();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: !kIsWeb,
         title: const Text("Posts"),
-        centerTitle: true,
+        centerTitle: !kIsWeb,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -70,16 +171,67 @@ class _UserPostsState extends State<UserPosts> {
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(posts[index].title),
-                  subtitle: Text(posts[index].body),
-                  leading: CircleAvatar(
-                    backgroundColor:
-                        posts[index].id.toString().length.isEven
-                            ? Colors.blue
-                            : Colors.red,
-                    child: Text(posts[index].id.toString()),
-                  ),
+                final post = posts[index];
+
+                return FutureBuilder<String>(
+                  future: detectPostLanguage(post.title, post.body),
+                  builder: (context, languageSnapshot) {
+                    if (languageSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const ListTile(
+                        title: Text("Detecting language..."),
+                        subtitle: Text("Please wait"),
+                      );
+                    } else if (languageSnapshot.hasData) {
+                      String postLanguage = languageSnapshot.data!;
+
+                      if (postLanguage != 'en') {
+                        return ListTile(
+                          title: Text(post.title),
+                          subtitle: Text(post.body),
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                Colors.primaries[index %
+                                    Colors.primaries.length],
+                            child: Text(
+                              post.id.toString(),
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          onTap: () async {
+                            Map<String, String> translatedContent =
+                                await translateText(post.title, post.body);
+                            showTranslationBottomSheet(
+                              context,
+                              translatedContent['title']!,
+                              translatedContent['body']!,
+                            );
+                          },
+                        );
+                      } else {
+                        return ListTile(
+                          title: Text(post.title),
+                          subtitle: Text(post.body),
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                Colors.primaries[index %
+                                    Colors.primaries.length],
+                            child: Text(
+                              post.id.toString(),
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      }
+                    } else {
+                      return const ListTile(
+                        title: Text("Error detecting language"),
+                        subtitle: Text(
+                          "Could not detect the language of this post.",
+                        ),
+                      );
+                    }
+                  },
                 );
               },
             );

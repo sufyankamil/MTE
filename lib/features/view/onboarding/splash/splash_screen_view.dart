@@ -15,12 +15,14 @@ class _SplashScreenViewState extends State<SplashScreenView> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
+      if(context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const OnboardingView1(),
           ),
         );
+      }
     });
   }
 
@@ -28,6 +30,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: Color(0XFF7F3DFF),
       ),

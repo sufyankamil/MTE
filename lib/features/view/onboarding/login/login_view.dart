@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:montra_expense_tracker/features/view/home/home_view.dart';
 import 'package:montra_expense_tracker/features/view/onboarding/forgot_password/forgot_password.dart';
 
 import '../signup/sign_up_view.dart';
@@ -18,6 +20,33 @@ class _LoginViewState extends State<LoginView> {
 
   final TextEditingController _passwordController = TextEditingController();
 
+  bool isChecked = false;
+
+  final storage = FlutterSecureStorage();
+
+  void saveCredentials(String email, String password) async {
+    await storage.write(key: 'email', value: email);
+    await storage.write(key: 'password', value: password);
+  }
+
+  void getCredentials() async {
+    String? email = await storage.read(key: 'email');
+    String? password = await storage.read(key: 'password');
+    if (email != null && password != null) {
+      _emailController.text = email;
+      _passwordController.text = password;
+      setState(() {
+        isChecked = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCredentials();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -28,7 +57,11 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Login"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: Form(
         key: _formKey,
         child: Column(
@@ -72,12 +105,46 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                spacing: 5,
+                children: [
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
+                    },
+                    activeColor: const Color(0XFF7F3DFF),
+                    checkColor: Colors.white,
+                  ),
+                  const Text("Remember me", style: TextStyle(fontSize: 18)),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      if (isChecked) {
+                        saveCredentials(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                      }
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeView(),
+                        ),
+                        (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0XFF7F3DFF),
