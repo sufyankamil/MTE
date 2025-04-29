@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 
@@ -22,9 +23,12 @@ class HomeView extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(icon: const Icon(Icons.notifications, color: Colors.white,), onPressed: () {}),
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white,),
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
@@ -35,19 +39,30 @@ class HomeView extends StatelessWidget {
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         spacing: 20,
         children: [
-          Expanded(
-            child: const ModelViewer(
-              backgroundColor: Color(0XFF7F3DFF),
-              src: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
-              alt: 'A 3D model of an astronaut',
-              ar: true,
-              autoRotate: true,
-              iosSrc: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
-              disableZoom: false,
-            ),
-          ),
+          kIsWeb
+              ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Sorry, this feature is not available on the web.",
+                  style: TextStyle(fontSize: 18),
+                ),
+              )
+              : Expanded(
+                child: const ModelViewer(
+                  backgroundColor: Color(0XFF7F3DFF),
+                  src:
+                      'https://modelviewer.dev/shared-assets/models/Astronaut.glb',
+                  alt: 'A 3D model of an astronaut',
+                  ar: true,
+                  autoRotate: true,
+                  iosSrc:
+                      'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
+                  disableZoom: false,
+                ),
+              ),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
@@ -56,7 +71,7 @@ class HomeView extends StatelessWidget {
             ),
           ),
           GridView.count(
-            crossAxisCount: 2,
+            crossAxisCount: 4,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [

@@ -38,7 +38,7 @@ class SettingsView extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => const OnboardingView1(),
                     ),
-                        (route) => false,
+                    (route) => false,
                   );
                 },
                 child: const Text("Logout"),
