@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive/hive.dart';
 import 'package:language_detector/language_detector.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:translator/translator.dart';
 
 import '../../api/user_api.dart';
@@ -20,10 +20,30 @@ class _UserPostsState extends State<UserPosts> {
 
   final translator = GoogleTranslator();
 
+  Future<List<PostsModel>> getUsersPostsData() async {
+    final box = await Hive.openBox('posts');
+
+    if (box.isNotEmpty) {
+      print("Box is not empty");
+      List<dynamic> postsList = box.get('posts') ?? [];
+      return postsList.map<PostsModel>((post) {
+        return PostsModel.fromJson(Map<String, dynamic>.from(post));
+      }).toList();
+    } else {
+      print("Box is empty");
+      usersPosts = getUsersPosts();
+      await box.put(
+        'posts',
+        usersPosts.then((posts) => posts.map((post) => post.toJson()).toList()),
+      );
+      return usersPosts;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    usersPosts = getUsersPosts();
+    usersPosts = getUsersPostsData();
   }
 
   // Detect the language of the post's content
@@ -77,49 +97,6 @@ class _UserPostsState extends State<UserPosts> {
     );
   }
 
-  // Request permission to access the user's audio,camera & location
-  void requestPermission() async {
-    final cameraStatus = await Permission.camera.request();
-    final locationStatus = await Permission.location.request();
-
-    if (cameraStatus == PermissionStatus.granted &&
-        locationStatus == PermissionStatus.granted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Permission granted"),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } else if (cameraStatus == PermissionStatus.denied ||
-        locationStatus == PermissionStatus.denied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(
-            "Permission denied",
-            style: TextStyle(color: Colors.white),
-          ),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } else if (cameraStatus == PermissionStatus.permanentlyDenied ||
-        locationStatus == PermissionStatus.permanentlyDenied) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(
-              "Permission denied. Please enable it in settings.",
-              style: TextStyle(color: Colors.white),
-            ),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-      await openAppSettings();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +109,7 @@ class _UserPostsState extends State<UserPosts> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               setState(() {
-                usersPosts = getUsersPosts();
+                usersPosts = getUsersPostsData();
               });
             },
           ),

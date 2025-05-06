@@ -91,13 +91,6 @@ class OnboardingView3 extends StatelessWidget {
                     ),
                     (route) => false,
                   );
-                  // Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder:
-                  //         (context) => HomeView(),
-                  //   ),
-                  // );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0XFFEEE5FF),

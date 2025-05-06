@@ -51,6 +51,7 @@ class _SignUpViewState extends State<SignUpView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: TextFormField(
+                    key: const Key("nameField"),
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: "Name",
@@ -69,6 +70,7 @@ class _SignUpViewState extends State<SignUpView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: TextFormField(
+                    key: const Key("emailField"),
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: "Email",
@@ -87,6 +89,7 @@ class _SignUpViewState extends State<SignUpView> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: TextFormField(
+                    key: const Key("passwordField"),
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: "Password",
@@ -108,6 +111,7 @@ class _SignUpViewState extends State<SignUpView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Checkbox(
+                        key: const Key("checkbox"),
                         value: isChecked,
                         onChanged: (value) {
                           setState(() {
@@ -157,10 +161,11 @@ class _SignUpViewState extends State<SignUpView> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+                      key: const Key("signUpButton"),
                       onPressed:
                           isChecked
                               ? () {
-                                if (_formKey.currentState!.validate()) {
+                                if (_formKey.currentState?.validate() ?? false) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

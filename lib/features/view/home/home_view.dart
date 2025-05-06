@@ -75,13 +75,13 @@ class HomeView extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              Card(
-                color: const Color(0XFF7F3DFF),
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/accountSetup');
-                    },
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, '/accountSetup');
+                },
+                child: Card(
+                  color: const Color(0XFF7F3DFF),
+                  child: Center(
                     child: const Text(
                       "Account Setup",
                       style: TextStyle(color: Colors.white),
@@ -89,13 +89,13 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
               ),
-              Card(
-                color: const Color(0XFF7F3DFF),
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/add-new-account');
-                    },
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, '/add-new-account');
+                },
+                child: Card(
+                  color: const Color(0XFF7F3DFF),
+                  child: Center(
                     child: const Text(
                       "Add New Account",
                       style: TextStyle(color: Colors.white),
@@ -103,32 +103,32 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
               ),
-              Card(
-                color: const Color(0XFF7F3DFF),
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/verification');
-                    },
-                    child: const Text(
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, '/verification');
+                },
+                child: Card(
+                  color: const Color(0XFF7F3DFF),
+                  child: Center(
+                    child:  const Text(
                       "Set Pin",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              Card(
-                color: const Color(0XFF7F3DFF),
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsView(),
-                        ),
-                      );
-                    },
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsView(),
+                    ),
+                  );
+                },
+                child: Card(
+                  color: const Color(0XFF7F3DFF),
+                  child: Center(
                     child: const Text(
                       "Settings",
                       style: TextStyle(color: Colors.white),
