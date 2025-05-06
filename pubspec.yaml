@@ -23,6 +23,10 @@ dependencies:
   language_detector: 1.0.1
   permission_handler: 12.0.0+1
   model_viewer_plus: 1.8.0
+  flex_color_scheme: 8.2.0
+  graphql_flutter: 5.2.0
+  hive: 2.2.3
+  mockito: 5.4.6
 
 dev_dependencies:
   flutter_test:

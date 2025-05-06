@@ -45,6 +45,7 @@ class OnboardingView2 extends StatelessWidget {
             bottom: 30,
             left: 30,
             child: TextButton(
+              key: const Key("prevButton"),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -63,6 +64,7 @@ class OnboardingView2 extends StatelessWidget {
             bottom: 30,
             right: 30,
             child: TextButton(
+              key: const Key("nextButton"),
               onPressed: () {
                 Navigator.push(
                   context,
